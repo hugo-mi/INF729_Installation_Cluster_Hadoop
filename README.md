@@ -43,39 +43,60 @@ Utilisation de Hive pour interroger de grandes bases de données
 
 ## Lancement du cluster
 
-`python3 LAUNCH.py cmdsh start`
+```console 
+python3 LAUNCH.py cmdsh start
+```
 
 ## Arrêt du cluster
 
-`python3 LAUNCH.py cmdsh stop`
+```console 
+python3 LAUNCH.py cmdsh stop
+```
 
 ## Commandes utiles
 
-`jps` 
+```console 
+jps
+```
 > La commande de JPS affiche tous les processus basés sur Java pour un utilisateur particulier. La commande de JPS doit s'exécuter à partir de la racine pour vérifier tous les nœuds d'exploitation de l'hôte.
 
-`bin/hadoop dfsadmin -report`
+```console
+bin/hadoop dfsadmin -report
+```
 > Affiche les informations et des statistiques du système de fichier HDFS.
 
-`bin/hadoop fs -put <file> input`
+```
+console bin/hadoop fs -put <file> input
+```
 > Peuplement du dossier `input` stocké dans HDFS
 
-`bin/hadoop jar <app>.jar app input output `
+```console 
+bin/hadoop jar <app>.jar app input output
+```
 > Lancement d'un programme java sous HDFS
 
 ## Exemple d'un programme WourdCount.java
 
 **Compiler WordCount.java et créer un jar**
-`bin/hadoop com.sun.tools.javac.Main WordCount.java`
-`jar cf wc.jar WordCount*.class`
+```console 
+bin/hadoop com.sun.tools.javac.Main WordCount.java
+```
+
+```console 
+jar cf wc.jar WordCount*.class
+```
 
 **Lancement du programme `Wordcount.java`**
 
-`bin/hadoop jar wc.jar WordCount /user/wordcount/input /user/joe/wordcount/output`
+```console 
+bin/hadoop jar wc.jar WordCount /user/wordcount/input /user/joe/wordcount/output
+```
 
 **Afficher le résultat du programme**
 
-`bin/hadoop fs -cat /user/wordcount/output/part-r-00000`
+```console 
+bin/hadoop fs -cat /user/wordcount/output/part-r-00000
+```
 
 **Execution d'un job MapReduce avec wc.jar sur un fichier de 3.6 Go du Common-Crawl**
 
@@ -89,18 +110,21 @@ Output du job MapReduce
 
 **Hive **est utilisé en tant que wordcount par la création d’une nouvelle table comme suit 
 
-`CREATE TABLE FILES (line STRING);
+```
+CREATE TABLE FILES (line STRING);
 LOAD DATA INPATH 'input/<fichier d’input>' OVERWRITE INTO TABLE FILES;
 CREATE TABLE word_counts AS
 SELECT word, count(1) AS count FROM
 (SELECT explode(split(line, ' ')) AS word FROM FILES) w
 GROUP BY word
 ORDER BY word;
-`
+```
 
 **Affichez la sortie**
 
-`bin/hadoop fs -cat /user/hive/warehouse/word_counts/000000_0`
+``` console
+bin/hadoop fs -cat /user/hive/warehouse/word_counts/000000_0
+```
 
 ![](https://github.com/hugo-mi/INF729_Installation_Cluster_Hadoop/blob/main/Images/WC_Output_Hive.png)
 
@@ -108,14 +132,20 @@ ORDER BY word;
 
 **Execution du programme pySpark `WC_pypsark_file_arg.py`**
 
-`bin/spark-submit ./WC_pyspark/WC_pypsark_file_arg.py ../hadoop/data/file02`
+``` console 
+bin/spark-submit ./WC_pyspark/WC_pypsark_file_arg.py ../hadoop/data/file02
+```
 
 **Execution du programme pySpark `wc.py` prenant en entré un fichier stocké dans le systège HDFS**
 
-`bin/spark spark-submit wc.py`
+``` console 
+bin/spark spark-submit wc.py
+```
 
 **Affichage du résultat**
 
-`bin/hadoop fs cat sparkouput/part-00000`
+``` console 
+bin/hadoop fs cat sparkouput/part-00000
+```
 
 ![](https://github.com/hugo-mi/INF729_Installation_Cluster_Hadoop/blob/main/Images/WC_Outpu2t.png)
